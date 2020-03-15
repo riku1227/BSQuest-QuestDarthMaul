@@ -1,0 +1,28 @@
+{
+    "coverImageFilename": "Cover.png",
+    "icon": "Cover.png",
+    "id": "QuestDarthMaul",
+    "name": "QuestDarthMaul",
+    "author": "riku1227",
+    "description": [
+        "Welcome to Darth Maul Mode"
+    ],
+    "category": "Gameplay",
+    "gameVersion": "1.7.0",
+    "version": "1.0.0",
+    "links": {
+		"project-home": "https://github.com/riku1227/BSQuest-QuestDarthMaul"
+	},
+    "platform": "Quest",
+    "components": [
+        {
+            "Type": "HookMod",
+            "InstallAction": {
+                "InstallLibraryFile": "libriku1227_quest_darth_maul.so"
+            },
+            "UninstallAction": {
+                "RemoveLibraryFile": "libriku1227_quest_darth_maul.so"
+            }
+        }
+    ]
+}
