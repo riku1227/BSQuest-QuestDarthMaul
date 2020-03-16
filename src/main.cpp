@@ -5,22 +5,7 @@
 #include "../extern/beatsaber-hook/shared/utils/utils.h"
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 #include "../extern/beatsaber-hook/shared/utils/typedefs.h"
- enum XRNode {
-		LeftEye,
-
-		RightEye,
-
-		CenterEye,
-
-		Head,
-
-		LeftHand,
-		RightHand,
-
-		GameController,
-	
-		TrackingReference,
-		HardwareTracker} XRNode;                                                                                                                                       
+                                                                                                                                   
 MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
     PlayerController_Update(self);
 
@@ -58,20 +43,15 @@ MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
         }
     }
 }
+
 // Haptic Remapping (gives errors, Going too need a UnityEngine.XR Replica)
-//MAKE_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, void, Il2CppObject* self, enum XRNode node) 
-//{
-//    node = XRNode.RightHand;
-//    this.Rumble(node, 0.13f, 1.0f, 0.0f);
-//}
+ MAKE_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, void, Il2CppObject* self, int node) 
+{
+     HapticFeedbackController_HitNote(self , node);
+   node = 5;    
+    il2cpp_utils::RunMethod(self, "Rumble" ,5, 0.13f, 1.0f, 0.0f);
+}
 
-
-/*
-./src/main.cpp:63:18: error: member reference base type 'enum XRNode' is not a structure or union
-    node = XRNode.RightHand;
-./src/main.cpp:64:5: error: invalid use of 'this' outside of a non-static member function
-    this.Rumble(node, 0.13f, 1.0f, 0.0f);
-*/
 
 
 __attribute__((constructor)) void lib_main()
@@ -83,5 +63,6 @@ extern "C" void load() {
     log(INFO, "Hello from il2cpp_init!");
     log(INFO, "Installing hooks...");
     INSTALL_HOOK_OFFSETLESS(PlayerController_Update, il2cpp_utils::FindMethod("", "PlayerController", "Update", 0));
+    INSTALL_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, il2cpp_utils::FindMethod("", "HapticFeedbackController", "HitNote", 1));
     log(INFO, "Installed all hooks!");
 }
