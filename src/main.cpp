@@ -1,10 +1,26 @@
 #include <string>
 #include <sstream>
 
-#include "../include/main.hpp"
+#include <dlfcn.h>
+#include "../extern/beatsaber-hook/shared/utils/utils.h"
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 #include "../extern/beatsaber-hook/shared/utils/typedefs.h"
+ enum XRNode {
+		LeftEye,
 
+		RightEye,
+
+		CenterEye,
+
+		Head,
+
+		LeftHand,
+		RightHand,
+
+		GameController,
+	
+		TrackingReference,
+		HardwareTracker} XRNode;                                                                                                                                       
 MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
     PlayerController_Update(self);
 
@@ -30,18 +46,33 @@ MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
             const MethodInfo* getLocalRotation = il2cpp_functions::class_get_method_from_name(transformClass, "get_localRotation", 0);
             const MethodInfo* setLocalRotation = il2cpp_functions::class_get_method_from_name(transformClass, "set_localRotation", 1);
 
-            Vector3 rightSaberLocalPosition;
-            il2cpp_utils::RunMethod(&rightSaberLocalPosition, rightSaberTransform, getMethod);
-            Quaternion rightSaberLocalRotation;
+                Vector3 rightSaberLocalPosition;
+                il2cpp_utils::RunMethod(&rightSaberLocalPosition, rightSaberTransform, getMethod);
+                Quaternion rightSaberLocalRotation;
             il2cpp_utils::RunMethod(&rightSaberLocalRotation, rightSaberTransform, getLocalRotation);
 
             il2cpp_utils::RunMethod(leftSaberTransform, setMethod, rightSaberLocalPosition);
             il2cpp_utils::RunMethod(leftSaberTransform, setLocalRotation, rightSaberLocalRotation);
-            il2cpp_utils::RunMethod(leftSaberTransform, setRotate, Vector3{ 0, 180, 180});
+            il2cpp_utils::RunMethod(leftSaberTransform, setRotate, Vector3{ 0, 180, 0});
             il2cpp_utils::RunMethod(leftSaberTransform, setTranslate, Vector3{0, 0, 0.335});
         }
     }
 }
+// Haptic Remapping (gives errors, Going too need a UnityEngine.XR Replica)
+//MAKE_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, void, Il2CppObject* self, enum XRNode node) 
+//{
+//    node = XRNode.RightHand;
+//    this.Rumble(node, 0.13f, 1.0f, 0.0f);
+//}
+
+
+/*
+./src/main.cpp:63:18: error: member reference base type 'enum XRNode' is not a structure or union
+    node = XRNode.RightHand;
+./src/main.cpp:64:5: error: invalid use of 'this' outside of a non-static member function
+    this.Rumble(node, 0.13f, 1.0f, 0.0f);
+*/
+
 
 __attribute__((constructor)) void lib_main()
 {

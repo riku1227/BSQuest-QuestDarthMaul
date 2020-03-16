@@ -1,4 +1,4 @@
-# Copyright (C) 2009 The Android Open Source Project
+	# Copyright (C) 2009 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 include $(CLEAR_VARS)
 LOCAL_LDLIBS     := -llog
-LOCAL_CFLAGS     := -D"MOD_ID=\"QuestDarthMaul\"" -D"VERSION=\"1.0.0\"" -I"C:/Program Files/Unity/Hub/Editor/2018.3.14f1/Editor/Data/il2cpp/libil2cpp"
+LOCAL_CFLAGS     := -D"MOD_ID=\"QuestDarthMaul\"" -D"VERSION=\"1.0.0\"" -I"C:\Program Files\Unity\Hub\Editor\2018.1.6f1\Editor\Data\il2cpp\libil2cpp"
 LOCAL_MODULE     := riku1227_quest_darth_maul
 LOCAL_CPPFLAGS   := -std=c++2a
 LOCAL_C_INCLUDES := ./include ./src
