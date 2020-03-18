@@ -1,10 +1,11 @@
 #include <string>
 #include <sstream>
 
-#include "../include/main.hpp"
+#include <dlfcn.h>
+#include "../extern/beatsaber-hook/shared/utils/utils.h"
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 #include "../extern/beatsaber-hook/shared/utils/typedefs.h"
-
+                                                                                                                                   
 MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
     PlayerController_Update(self);
 
@@ -30,18 +31,28 @@ MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
             const MethodInfo* getLocalRotation = il2cpp_functions::class_get_method_from_name(transformClass, "get_localRotation", 0);
             const MethodInfo* setLocalRotation = il2cpp_functions::class_get_method_from_name(transformClass, "set_localRotation", 1);
 
-            Vector3 rightSaberLocalPosition;
-            il2cpp_utils::RunMethod(&rightSaberLocalPosition, rightSaberTransform, getMethod);
-            Quaternion rightSaberLocalRotation;
+                Vector3 rightSaberLocalPosition;
+                il2cpp_utils::RunMethod(&rightSaberLocalPosition, rightSaberTransform, getMethod);
+                Quaternion rightSaberLocalRotation;
             il2cpp_utils::RunMethod(&rightSaberLocalRotation, rightSaberTransform, getLocalRotation);
 
             il2cpp_utils::RunMethod(leftSaberTransform, setMethod, rightSaberLocalPosition);
             il2cpp_utils::RunMethod(leftSaberTransform, setLocalRotation, rightSaberLocalRotation);
-            il2cpp_utils::RunMethod(leftSaberTransform, setRotate, Vector3{ 0, 180, 180});
+            il2cpp_utils::RunMethod(leftSaberTransform, setRotate, Vector3{ 0, 180, 0});
             il2cpp_utils::RunMethod(leftSaberTransform, setTranslate, Vector3{0, 0, 0.335});
         }
     }
 }
+
+// Haptic Remapping (gives errors, Going too need a UnityEngine.XR Replica)
+ MAKE_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, void, Il2CppObject* self, int node) 
+{
+     HapticFeedbackController_HitNote(self , node);
+   node = 5;    
+    il2cpp_utils::RunMethod(self, "Rumble" ,5, 0.13f, 1.0f, 0.0f);
+}
+
+
 
 __attribute__((constructor)) void lib_main()
 {
@@ -52,5 +63,6 @@ extern "C" void load() {
     log(INFO, "Hello from il2cpp_init!");
     log(INFO, "Installing hooks...");
     INSTALL_HOOK_OFFSETLESS(PlayerController_Update, il2cpp_utils::FindMethod("", "PlayerController", "Update", 0));
+    INSTALL_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, il2cpp_utils::FindMethod("", "HapticFeedbackController", "HitNote", 1));
     log(INFO, "Installed all hooks!");
 }
