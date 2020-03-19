@@ -45,10 +45,8 @@ MAKE_HOOK_OFFSETLESS(PlayerController_Update, void, Il2CppObject* self) {
 }
 
 // Haptic Remapping (gives errors, Going too need a UnityEngine.XR Replica)
- MAKE_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, void, Il2CppObject* self, int node) 
-{
-     HapticFeedbackController_HitNote(self , node);
-   node = 5;    
+MAKE_HOOK_OFFSETLESS(HapticFeedbackController_HitNote, void, Il2CppObject* self, int node) {
+    //HapticFeedbackController_HitNote(self , node);
     il2cpp_utils::RunMethod(self, "Rumble" ,5, 0.13f, 1.0f, 0.0f);
 }
 
